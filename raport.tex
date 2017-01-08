@@ -1,0 +1,73 @@
+\documentclass[12pt]{article}
+\usepackage {xcolor}
+\usepackage {lineno}
+\usepackage {graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.7in]{geometry}
+ \setlength{\parindent}{0pt}
+ \setlength{\parskip}{0.3cm}
+
+\usepackage{lmodern}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{xinttools}
+\selectlanguage{polish}
+\title {Zadania Domowe Seria I}
+\author {Katarzyna Kowalska}
+\date{25.11.2015}
+
+\usepackage{amsmath}
+%commands matematyka
+%logika
+%\newcommand {\iff} {\Leftrightarrow}
+\newcommand {\wtedy} {\Rightarrow}
+\newcommand {\oraz}{\quad\wedge\quad}
+\newcommand{\Lim}{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{n \rightarrow \infty}\;$}}}
+
+%macierze
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\rank}{rank}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\lhead{Opis algorytmu Brandesa}
+\rhead{Katarzyna Kowalska}
+
+\begin{document}
+	\section* {Opis rozwiązania}
+		W swoim rozwiązaniu wykorzystuję współbieżność do liczenia algorytmu Brandesa
+		zauważając, że liczenie delty dla różnych źródeł jest kompletnie niezależne.
+		Każdy wątek otrzyma swój zbiór wierzchołków, które ma przerobić.
+		
+		Rozdzielam dokładnie tę pętlę, która jest w opisie algorytmu ze strony zaznaczona jako ,,in parallel''.
+		Można ją podzielić równo między wszystkie wątki (każdy dostałby kolejne $\frac{n}{d}$ wierzchołków),
+		jednakże może się to okazać wysoce nieefektywne, gdyż długość kroku pętli dla danego wierzchołka jako żródła
+		może przejść pesymistycznie wszystkie krawędzie w grafie albo odwiedzić tylko źródło (dla wierzchołka o stopniu wychodzącym 0).
+		Dlatego każdy wątek, gdy nie ma nic do zrobienia ,,prosi'' o nowy wierzchołek do przerobienia.
+		Współbieżne ,,proszenie'' o kolejny wierzchołek kontroluje wzajemne wykluczanie sekcji krytycznej realizowane za pomocą mutexu.
+		
+	\section* {Wydajność}
+		Testy były przeprowadzane na moim komputerze oraz na students.
+		
+		
+		\begin{tabular}{lll|}
+			Mój komputer & (Intel i5, & 4 rdzenie): \\
+			Wątki & Czas & Przyspieszenie\\
+			1 & 2.207 & - \\
+			\xintForpair #1#2 in {(2,1.301),(3,1.103),(4,1.010),(5,1.030), (6, 1.032), (7, 1.048), (8, 1.083)}
+			\do
+				{#1 & #2 & \pgfmathparse{2.207 / #2}\pgfmathresult \\}
+		\end{tabular}
+		\begin{tabular}{lll}
+			Students: & & \\
+			Wątki & Czas & Przyspieszenie\\
+			1 & 7.274 & - \\
+			\xintForpair #1#2 in {(2,4.098),(3,2.411),(4,1.990),(5,1.733), (6, 1.593), (7, 1.359), (8, 1.261)}
+			\do
+				{#1 & #2 & \pgfmathparse{7.274 / #2}\pgfmathresult \\}
+		\end{tabular}
+
+\end{document}
