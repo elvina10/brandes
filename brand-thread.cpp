@@ -34,8 +34,8 @@ int get_next_node(mutex& get_access) {
 }
 
 void run(const vector<vector<int>>& G, mutex& get_access, promise<vector<long double>>& result) {
-	vector<int> sigma, d;
-	vector<long double> delta, BC;
+	vector<int> d;
+	vector<long double> sigma, delta, BC;
 	vector<vector<int>> P;
 	int n = G.size();
 	sigma.resize(n, 0);
