@@ -33,9 +33,9 @@ int get_next_node(mutex& get_access) {
 	return ++last_node;
 }
 
-void run(const vector<vector<int>>& G, mutex& get_access, promise<vector<long double>>& result) {
+void run(const vector<vector<int>>& G, mutex& get_access, promise<vector<double>>& result) {
 	vector<int> d;
-	vector<long double> sigma, delta, BC;
+	vector<double> sigma, delta, BC;
 	vector<vector<int>> P;
 	int n = G.size();
 	sigma.resize(n, 0);
@@ -72,7 +72,7 @@ void run(const vector<vector<int>>& G, mutex& get_access, promise<vector<long do
 			for (int i = S.size() - 1; i >= 0; i --) {
 				int w = S[i];
 				for (int v: P[w]) 
-					delta[v] += (sigma[v] / (long double) sigma[w]) * (1 + delta[w]);
+					delta[v] += (sigma[v] / sigma[w]) * (1 + delta[w]);
 				if (w != s)
 					BC[w] += delta[w];
 			}
@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
 	mutex get_access;
 	
 	//Patrial results stored in promise
-	vector<promise<vector<long double>>> promise_v(n_threads);
+	vector<promise<vector<double>>> promise_v(n_threads);
 	
 	for (int i = 1; i < n_threads; i ++) { //we are thread no. 0
 		thread t{[&G, &get_access, &promise_v, i]{run(G, get_access, promise_v[i]);}};
@@ -115,11 +115,11 @@ int main(int argc, char* argv[]) {
 	}
 	run(G, get_access, promise_v[0]);
 	
-	vector<long double> BC = promise_v[0].get_future().get();
+	vector<double> BC = promise_v[0].get_future().get();
 	
 	//Accumulating partial results
 	for (int i = 1; i < n_threads; i++) {
-		vector<long double> BCpart = promise_v[i].get_future().get();
+		vector<double> BCpart = promise_v[i].get_future().get();
 		assert(BC.size() == BCpart.size());
 		for (int i = 0; i < BC.size(); i ++) {
 			BC[i] += BCpart[i];
@@ -130,7 +130,7 @@ int main(int argc, char* argv[]) {
 		int a = p.first;
 		int b = p.second;
 		if (not G[b].empty()) {
-			printf("%d %Lf\n", a, BC[b]);
+			printf("%d %lf\n", a, BC[b]);
 		}
 	}
 }

@@ -48,26 +48,19 @@
 		może przejść pesymistycznie wszystkie krawędzie w grafie albo odwiedzić tylko źródło (dla wierzchołka o stopniu wychodzącym 0).
 		Dlatego każdy wątek, gdy nie ma nic do zrobienia ,,prosi'' o nowy wierzchołek do przerobienia.
 		Współbieżne ,,proszenie'' o kolejny wierzchołek kontroluje wzajemne wykluczanie sekcji krytycznej realizowane za pomocą mutexu.
+
+		Ponadto nie deklaruje wielokrotnie tych samych wektorów dla jednego wątku oraz nie czyszczę całej tablicy przy każdym obrocie, a jedynie te pola, których użyłam w tym obrocie pętli.
 		
 	\section* {Wydajność}
-		Testy były przeprowadzane na moim komputerze oraz na students.
+		Testy były przeprowadzane na students, podaję średnie czasy z 30 wykonań oraz minimalny i maksymalny czas wykonania. Przyspieszenie jest liczone dla średnich czasów.
 		
-		
-		\begin{tabular}{lll|}
-			Mój komputer & (Intel i5, & 4 rdzenie): \\
-			Wątki & Czas & Przyspieszenie\\
-			1 & 2.207 & - \\
-			\xintForpair #1#2 in {(2,1.301),(3,1.103),(4,1.010),(5,1.030), (6, 1.032), (7, 1.048), (8, 1.083)}
-			\do
-				{#1 & #2 & \pgfmathparse{2.207 / #2}\pgfmathresult \\}
-		\end{tabular}
-		\begin{tabular}{lll}
+		\begin{tabular}{lllll}
 			Students: & & \\
-			Wątki & Czas & Przyspieszenie\\
+			Wątki & MIN & MAX & AVG & Przyspieszenie\\
 			1 & 7.274 & - \\
-			\xintForpair #1#2 in {(2,4.098),(3,2.411),(4,1.990),(5,1.733), (6, 1.593), (7, 1.359), (8, 1.261)}
+			\xintForpair #1#2#3 in {(2,4.098,0),(3,2.411,0),(4,1.990,0),(5,1.733,0), (6, 1.593,0), (7, 1.359,0), (8, 1.261,0)}
 			\do
-				{#1 & #2 & \pgfmathparse{7.274 / #2}\pgfmathresult \\}
+				{#1 & #2 & #3 & & \pgfmathparse{7.274 / #2}\pgfmathresult \\}
 		\end{tabular}
 
 \end{document}
