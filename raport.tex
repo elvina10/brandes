@@ -49,7 +49,7 @@
 		Dlatego każdy wątek, gdy nie ma nic do zrobienia ,,prosi'' o nowy wierzchołek do przerobienia.
 		Współbieżne ,,proszenie'' o kolejny wierzchołek kontroluje wzajemne wykluczanie sekcji krytycznej realizowane za pomocą mutexu.
 
-		Ponadto nie deklaruje wielokrotnie tych samych wektorów dla jednego wątku oraz nie czyszczę całej tablicy przy każdym obrocie, a jedynie te pola, których użyłam w tym obrocie pętli.
+		Ponadto nie deklaruje wielokrotnie tych samych wektorów dla jednego wątku oraz nie czyszczę całej tablicy przy każdym obrocie, a jedynie te pola, których użyłam w tym obrocie pętli oraz wyniki z wielu wątków sumuję na koniec zamiast gwarantować współbieżny dostęp do tablicy BC.
 		
 	\section* {Wydajność}
 		Testy były przeprowadzane na students, podaję średnie czasy z 30 wykonań oraz minimalny i maksymalny czas wykonania. Przyspieszenie jest liczone dla średnich czasów.
